@@ -20,6 +20,8 @@ func New(db DBTX) *Queries {
 	return &Queries{db: db}
 }
 // Queries is a collection of database queries.
+// Each query only do 1 operation on 1 specific table.
+// So Queries doesn't support transactions.
 type Queries struct {
 	db DBTX
 }
