@@ -15,7 +15,7 @@ func TestTransferTX(t *testing.T) {
 	account2 := createRandomAccount(t)
 	fmt.Println(">> before transfer", account1.Balance, account2.Balance)
 	// run n concurrent transfers transactions
-	n := 5
+	n := 2
 	amount := int64(10)
 
 	errs := make(chan error)
@@ -23,8 +23,13 @@ func TestTransferTX(t *testing.T) {
 
 	// run n concurrent transfer transaction
 	for i := 0; i < n; i++ {
+		// transaction name
+		txName := fmt.Sprintf("tx %d", i+1)
 		go func() {
-			result, err := store.TransferTx(context.Background(), TransferTxParams{
+			// ctx is used to pass the transaction name to the store
+			// txKey is a key to the context's values map
+			ctx := context.WithValue(context.Background(), txKey, txName)
+			result, err := store.TransferTx(ctx, TransferTxParams{
 				FromAccountID: account1.ID,
 				ToAccountID:   account2.ID,
 				Amount:        amount,
