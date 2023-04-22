@@ -8,27 +8,22 @@ import (
 	"context"
 	"database/sql"
 )
-// DBTX is an interface that wraps the methods of *sql.DB and *sql.Tx.
+
 type DBTX interface {
 	ExecContext(context.Context, string, ...interface{}) (sql.Result, error)
 	PrepareContext(context.Context, string) (*sql.Stmt, error)
 	QueryContext(context.Context, string, ...interface{}) (*sql.Rows, error)
 	QueryRowContext(context.Context, string, ...interface{}) *sql.Row
 }
-// New returns a new Queries instance.
+
 func New(db DBTX) *Queries {
 	return &Queries{db: db}
 }
-// Queries is a collection of database queries.
-// Each query only do 1 operation on 1 specific table.
-// So Queries doesn't support transactions.
+
 type Queries struct {
 	db DBTX
 }
 
-// WithTx sets the queries to be executed on a transaction.
-// It returns a copy of the queries that will execute on the provided transaction.
-// If the provided transaction is nil, the queries will be executed on the database.
 func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 	return &Queries{
 		db: tx,
