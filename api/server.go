@@ -19,6 +19,7 @@ func NewServer(store db.Store) *Server {
 	// If put multi func last will be handler and other will be middleware
 	router.POST("/accounts", server.createAccount)
 	router.GET("/accounts/:id", server.getAccount)
+	router.GET("/accounts", server.listAccounts)
 
 	server.router = router
 	return server
