@@ -7,15 +7,20 @@ import (
 )
 
 // store provides all functions to execute database queries and transactions.
-// It also provides a way to create a new store with a transaction.
-type Store struct {
+// It wraps the database connection pool and exposes methods to execute queries and transactions.
+type Store interface {
+	TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error)
+}
+
+// SQLStore provides all functions to execute SQL queries and transactions.
+type SQLStore struct {
 	*Queries
 	db *sql.DB
 }
 
 // NewStore creates a new store.
-func NewStore(db *sql.DB) *Store {
-	return &Store{
+func NewStore(db *sql.DB) Store {
+	return &SQLStore{
 		db:      db,
 		Queries: New(db),
 	}
@@ -23,7 +28,7 @@ func NewStore(db *sql.DB) *Store {
 
 // execTx executes a function within a database transaction.
 // don't export this function, it's only used internally
-func (store *Store) execTx(ctx context.Context, fn func(*Queries) error) error {
+func (store *SQLStore) execTx(ctx context.Context, fn func(*Queries) error) error {
 	tx, err := store.db.BeginTx(ctx, nil)
 	if err != nil {
 		return err
@@ -64,7 +69,7 @@ type TransferTxResult struct {
 // TransferTx performs a money transfer from one account to another.
 // It creates a transfer record and updates account balances within a database transaction.
 // Why use closure? Because we want to use the same transaction for all queries.
-func (store *Store) TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error) {
+func (store *SQLStore) TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error) {
 	var result TransferTxResult
 
 	err := store.execTx(ctx, func(q *Queries) error {
