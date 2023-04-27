@@ -8,7 +8,9 @@ import (
 
 // store provides all functions to execute database queries and transactions.
 // It wraps the database connection pool and exposes methods to execute queries and transactions.
+// Querier is an interface that groups the Query and Exec methods.
 type Store interface {
+	Querier
 	TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error)
 }
 
