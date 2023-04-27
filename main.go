@@ -7,6 +7,7 @@ import (
 	"github.com/Kcih4518/simpleBank/api"
 	db "github.com/Kcih4518/simpleBank/db/sqlc"
 	"github.com/Kcih4518/simpleBank/util"
+	_ "github.com/golang/mock/mockgen/model"
 	_ "github.com/lib/pq" // postgres driver
 )
 
