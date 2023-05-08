@@ -1,9 +1,15 @@
 package token
 
 import (
+	"errors"
 	"time"
 
 	"github.com/google/uuid"
+)
+
+// Different types of error returned by the VerifyToken function
+var (
+	ErrExpiredToken = errors.New("token has expired")
 )
 
 // Payload contains the payload data of the token
@@ -28,4 +34,12 @@ func NewPayload(username string, duration time.Duration) (*Payload, error) {
 	}
 
 	return payload, nil
+}
+
+// Valid checks if the token payload is valid or not
+func (payload *Payload) Valid() error {
+	if time.Now().After(payload.ExpiredAt) {
+		return ErrExpiredToken
+	}
+	return nil
 }
