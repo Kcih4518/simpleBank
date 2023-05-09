@@ -36,6 +36,7 @@ func NewServer(config util.Config, store db.Store) (*Server, error) {
 
 	// If put multi func last will be handler and other will be middleware
 	router.POST("/users", server.createUser)
+	router.POST("/users/login", server.loginUser)
 
 	router.POST("/accounts", server.createAccount)
 	router.GET("/accounts/:id", server.getAccount)
