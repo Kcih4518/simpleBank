@@ -35,4 +35,10 @@ server:
 mock:
 					mockgen -build_flags=--mod=mod -destination db/mock/store.go -package mockdb github.com/Kcih4518/simpleBank/db/sqlc Store
 
-.PHONY: network postgres createdb dropdb migrateup migratedown sqlc test server mock migrateup1 migratedown1
+run:
+					docker run --name simplebank -p 8080:8080 simplebank:latest
+
+build:
+					docker build -t simplebank:latest .
+
+.PHONY: network postgres createdb dropdb migrateup migratedown sqlc test server mock migrateup1 migratedown1 run build
