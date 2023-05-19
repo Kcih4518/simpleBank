@@ -1,4 +1,5 @@
 DB_URL=postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable
+AWS_DB_URL=postgresql://root:EyX0uCTu3qnb2bCclUzT@simple-bank.ci28ofkmintl.us-east-1.rds.amazonaws.com:5432/simple_bank
 
 network:
 	docker network create bank-network
@@ -26,6 +27,18 @@ migratedown:
 migratedown1:
 					migrate -path db/migration -database "$(DB_URL)" -verbose down 1
 
+migrateup_aws:
+					migrate -path db/migration -database "$(AWS_DB_URL)" -verbose up
+
+migrateup1_aws:
+					migrate -path db/migration -database "$(AWS_DB_URL)" -verbose up 1
+
+migratedown_aws:
+					migrate -path db/migration -database "$(AWS_DB_URL)" -verbose down
+
+migratedown1_aws:
+					migrate -path db/migration -database "$(AWS_DB_URL)" -verbose down 1
+
 sqlc:
 					sqlc generate
 
@@ -44,4 +57,4 @@ run:
 build:
 					docker build -t simplebank:latest .
 
-.PHONY: network postgres createdb dropdb migrateup migratedown sqlc test server mock migrateup1 migratedown1 run build
+.PHONY: network postgres createdb dropdb migrateup migratedown sqlc test server mock migrateup1 migratedown1 run build migrateup_aws migrateup1_aws migratedown_aws migratedown1_aws
