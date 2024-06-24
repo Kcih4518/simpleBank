@@ -1,0 +1,34 @@
+/*
+one: returns a single record
+many: returns multiple record
+RETURNING * : return all record columns
+*/
+-- name: CreateEntry :one
+INSERT INTO entries
+  (
+  account_id,
+  amount
+  )
+VALUES
+  (
+    $1, $2
+)
+RETURNING *;
+
+-- name: GetEntry :one
+SELECT *
+FROM entries
+WHERE id = $1
+LIMIT 1;
+
+/*
+GetEntries returns all entries for a given account
+*/
+-- name: ListEntries :many
+SELECT *
+FROM entries
+WHERE account_id = $1
+ORDER BY id
+LIMIT $2
+OFFSET
+$3;
