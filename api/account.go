@@ -105,3 +105,38 @@ func (server *Server) DeleteAccount(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, gin.H{"message": "account deleted"})
 }
+
+// updateAccountRequest is a helper to format error message
+// ID from ShouldBindUri
+type updateAccountUriRequest struct {
+	ID int64 `uri:"id" binding:"required,min=1"`
+}
+
+type updateAccountJsonRequest struct {
+	Balance int64 `json:"balance" binding:"required,min=0"`
+}
+
+func (server *Server) UpdateAccount(ctx *gin.Context) {
+
+	var req updateAccountUriRequest
+	if err := ctx.ShouldBindUri(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
+
+	var jsonReq updateAccountJsonRequest
+	if err := ctx.ShouldBindJSON(&jsonReq); err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
+	arg := db.UpdateAccountParams{
+		ID:      req.ID,
+		Balance: jsonReq.Balance,
+	}
+	account, err := server.store.UpdateAccount(ctx, arg)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+	ctx.JSON(http.StatusOK, account)
+}
