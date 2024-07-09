@@ -42,6 +42,6 @@ air:
 					air -c .air.toml
 
 mock:
-					mockgen -build_flags=--mod=mod -destination db/mock/store.go -package mockdb github.com/Kcih4518/simpleBank_2023/db/sqlc Store
+					mockgen -build_flags=--mod=mod -destination db/mock/store.go -package mockdb github.com/Kcih4518/simpleBank/db/sqlc Store
 
 .PHONY: network postgres createdb dropdb migrateup migratedown sqlc test clean server air mock migrateup1 migratedown1
