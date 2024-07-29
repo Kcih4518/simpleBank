@@ -44,4 +44,11 @@ air:
 mock:
 					mockgen -build_flags=--mod=mod -destination db/mock/store.go -package mockdb github.com/Kcih4518/simpleBank/db/sqlc Store
 
-.PHONY: network postgres createdb dropdb migrateup migratedown sqlc test clean server air mock migrateup1 migratedown1
+db_docs:
+					dbdocs build doc/db.dbml
+
+db_schema:
+					dbml2sql --postgres -o doc/schema.sql doc/db.dbml
+
+
+.PHONY: network postgres createdb dropdb migrateup migratedown sqlc test clean server air mock migrateup1 migratedown1 db_docs db_schema
