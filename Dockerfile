@@ -5,16 +5,14 @@ COPY go.* ./
 RUN go mod download
 COPY . .
 RUN go build -o main main.go
-RUN apk add --no-cache curl \
-    && curl -L https://github.com/golang-migrate/migrate/releases/download/v4.15.2/migrate.linux-amd64.tar.gz | tar xvz
 
 # Run stage
 FROM alpine:3.19
 RUN apk add --no-cache ca-certificates
 WORKDIR /app
-COPY --from=builder /app/main /app/migrate ./
+COPY --from=builder /app/main .
 COPY app.env start.sh wait-for.sh ./
-COPY db/migration ./migration
+COPY db/migration ./db/migration
 
 EXPOSE 8080
 ENTRYPOINT ["/app/start.sh"]
