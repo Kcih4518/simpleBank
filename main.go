@@ -67,7 +67,7 @@ func runGrpcServer(config util.Config, store db.Store) {
 func runGatewayServer(config util.Config, store db.Store) {
 	server, err := gapi.NewServer(config, store)
 	if err != nil {
-		log.Fatal("cannot create server:")
+		log.Fatal("cannot create server:", err)
 	}
 
 	jsonOption := runtime.WithMarshalerOption(runtime.MIMEWildcard, &runtime.JSONPb{
@@ -85,23 +85,27 @@ func runGatewayServer(config util.Config, store db.Store) {
 
 	err = pb.RegisterSimpleBankHandlerServer(ctx, grpcMux, server)
 	if err != nil {
-		log.Fatal("cannot register handler server:")
+		log.Fatal("cannot register handler server:", err)
 	}
 
 	mux := http.NewServeMux()
 	mux.Handle("/", grpcMux)
 
+	fs := http.FileServer(http.Dir("./doc/swagger/"))
+	swaggerHandler := http.StripPrefix("/swagger/", fs)
+	mux.Handle("/swagger/", swaggerHandler)
+
 	listener, err := net.Listen("tcp", config.HTTPServerAddress)
 
 	if err != nil {
-		log.Fatal("cannot create listener:")
+		log.Fatal("cannot create listener:", err)
 	}
 
 	log.Printf("start HTTP gateway server on %s", listener.Addr().String())
 
 	err = http.Serve(listener, mux)
 	if err != nil {
-		log.Fatal("cannot start HTTP gateway server:")
+		log.Fatal("cannot start HTTP gateway server:", err)
 	}
 
 }
