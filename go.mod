@@ -17,7 +17,6 @@ require (
 	github.com/rakyll/statik v0.1.7
 	github.com/spf13/viper v1.19.0
 	github.com/stretchr/testify v1.9.0
-	github.com/techschool/simplebank v0.0.0-20240330095002-931b0d981595
 	go.uber.org/mock v0.4.0
 	golang.org/x/crypto v0.25.0
 	google.golang.org/genproto/googleapis/api v0.0.0-20240723171418-e6d459c13d2a
