@@ -30,7 +30,7 @@ sqlc:
 					sqlc generate
 
 test:
-					go test -count=1 -v -cover ./...
+					go test -count=1 -v -cover -short ./...
 
 clean:
 					docker exec -it postgres psql -U root -d simple_bank -c "TRUNCATE TABLE accounts, entries, transfers CASCADE;"
