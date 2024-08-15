@@ -46,6 +46,7 @@ air:
 
 mock:
 					mockgen -build_flags=--mod=mod -destination db/mock/store.go -package mockdb github.com/Kcih4518/simpleBank/db/sqlc Store
+					mockgen -package mockwk -destination worker/mock/distributor.go github.com/Kcih4518/simpleBank/worker TaskDistributor
 
 db_docs:
 					dbdocs build doc/db.dbml
