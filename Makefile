@@ -26,6 +26,9 @@ migratedown:
 migratedown1:
 					migrate -path db/migration -database "$(DB_URL)" -verbose down 1
 
+new_migration:
+					migrate create -ext sql -dir db/migration -seq $(name)
+
 sqlc:
 					sqlc generate
 
@@ -69,4 +72,4 @@ redis:
 
 
 
-.PHONY: network postgres createdb dropdb migrateup migratedown sqlc test clean server air mock migrateup1 migratedown1 db_docs db_schema proto evans redis
+.PHONY: network postgres createdb dropdb migrateup migratedown new_migration sqlc test clean server air mock migrateup1 migratedown1 db_docs db_schema proto evans redis
