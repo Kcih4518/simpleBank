@@ -76,7 +76,7 @@ func TestCreateTransfer(t *testing.T) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user1.Username, time.Minute)
 			},
 			buildStubs: func(store *mockdb.MockStore) {
-				store.EXPECT().GetAccount(gomock.Any(), gomock.Eq(account1.ID)).Times(1).Return(db.Account{}, sql.ErrNoRows)
+				store.EXPECT().GetAccount(gomock.Any(), gomock.Eq(account1.ID)).Times(1).Return(db.Account{}, db.ErrRecordNotFound)
 
 				store.EXPECT().GetAccount(gomock.Any(), gomock.Eq(account2.ID)).Times(0)
 
@@ -100,7 +100,7 @@ func TestCreateTransfer(t *testing.T) {
 			buildStubs: func(store *mockdb.MockStore) {
 				store.EXPECT().GetAccount(gomock.Any(), gomock.Eq(account1.ID)).Times(1).Return(account1, nil)
 
-				store.EXPECT().GetAccount(gomock.Any(), gomock.Eq(account2.ID)).Times(1).Return(db.Account{}, sql.ErrNoRows)
+				store.EXPECT().GetAccount(gomock.Any(), gomock.Eq(account2.ID)).Times(1).Return(db.Account{}, db.ErrRecordNotFound)
 
 				store.EXPECT().TransferTx(gomock.Any(), gomock.Any()).Times(0)
 			},
