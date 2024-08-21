@@ -15,7 +15,7 @@ import (
 	db "github.com/Kcih4518/simpleBank/db/sqlc"
 	"github.com/Kcih4518/simpleBank/util"
 	"github.com/gin-gonic/gin"
-	"github.com/lib/pq"
+
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 )
@@ -132,7 +132,7 @@ func TestCreateUserAPI(t *testing.T) {
 			},
 			buildStubs: func(store *mockdb.MockStore) {
 
-				store.EXPECT().CreateUser(gomock.Any(), gomock.Any()).Times(1).Return(db.User{}, &pq.Error{Code: pq.ErrorCode("23505")})
+				store.EXPECT().CreateUser(gomock.Any(), gomock.Any()).Times(1).Return(db.User{}, db.ErrUniqueViolation)
 
 			},
 			checkResponse: func(t *testing.T, recoder *httptest.ResponseRecorder) {
